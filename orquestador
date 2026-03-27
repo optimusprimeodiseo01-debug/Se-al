@@ -1,0 +1,20 @@
+# main.py
+
+from data_feed.yahoo import get_close_prices
+from tapiz_engine.core import build_L
+from tapiz_engine.decision import compute_decision
+
+def run(symbol="GOOGL"):
+    prices = get_close_prices(symbol)
+
+    L = build_L(prices)
+
+    decision, score = compute_decision(L)
+
+    print("\n=== SYMBOL ===", symbol)
+    print("PRICES:", prices)
+    print("SCORE:", score)
+    print("DECISION:", decision)
+
+if __name__ == "__main__":
+    run()
