@@ -1,0 +1,15 @@
+Valores-/
+│
+├── tapiz_engine/
+│   ├── __init__.py
+│   ├── core.py        # L, H, K
+│   └── decision.py    # BUY/SELL/HOLD
+│
+├── data_feed/
+│   └── yahoo.py       # yfinance
+│
+├── main.py            # orquestador
+├── requirements.txt
+│
+└── .devcontainer/
+    └── devcontainer.json
