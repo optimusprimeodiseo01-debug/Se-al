@@ -1,0 +1,12 @@
+# data_feed/yahoo.py
+
+import yfinance as yf
+
+def get_close_prices(symbol="GOOGL", period="5d"):
+    stock = yf.Ticker(symbol)
+    hist = stock.history(period=period)
+
+    if hist.empty:
+        raise ValueError("No data")
+
+    return hist['Close'].values
