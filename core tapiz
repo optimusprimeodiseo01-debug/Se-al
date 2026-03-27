@@ -1,0 +1,16 @@
+# tapiz_engine/core.py
+
+import numpy as np
+
+def build_L(prices):
+    prices = np.where(prices <= 0, 1e-9, prices)
+
+    H = np.log(prices)
+
+    H_matrix = np.tile(H, (len(H), 1))
+
+    K = H_matrix - H_matrix.T
+
+    L = 1j * K
+
+    return L
