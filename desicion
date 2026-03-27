@@ -1,0 +1,15 @@
+# tapiz_engine/decision.py
+
+import numpy as np
+
+def compute_decision(L):
+    eigenvalues, _ = np.linalg.eig(L)
+
+    score = np.real(eigenvalues).sum()
+
+    if score > 0:
+        return "BUY", score
+    elif score < 0:
+        return "SELL", score
+    else:
+        return "HOLD", score
