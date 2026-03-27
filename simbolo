@@ -1,0 +1,14 @@
+El ciclo se reinicia:
+   - El sistema sigue funcionando de manera continua, asegurando un proceso autónomo sin intervención humana.Cifrado de Clave Privada:
+   - El sistema se asegura de que el acceso a las claves privadas esté restringido solo al Executor autorizado.
+   - Uso de `chmod 600` para asegurar la protección de la clave.Procesamiento Matemático:
+   - Uso de matrices y operadores matemáticos complejos para procesar las señales limpias.
+   - El operador L se aplica para obtener el "Score" de la decisión.Automatización del Flujo:
+   - El "Score" validado traduce la decisión a una acción automática (BUY, SELL, HOLD).
+   - La ejecución es autónoma sin intervención humana.Confirmación de Precisión:
+   - Se realizan pruebas de exactitud utilizando `test_matrix.py` y `test_entropy.py`.
+   - Validación de los cálculos antes de tomar decisiones de inversión.Filtro Estocástico:
+   - Filtrado espectral para eliminar el ruido y mantener la señal relevante.
+   - Análisis de tendencias y ajustes estadísticos.Captura de señales web:
+   - Se toman señales crudas y no procesadas desde el entorno web.
+   - El filtro de ruido es aplicado para mejorar la calidad de las señales.
