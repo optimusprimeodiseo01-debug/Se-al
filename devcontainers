@@ -1,5 +1,114 @@
-{
-  "name": "tapiz-engine",
-  "image": "mcr.microsoft.com/devcontainers/python:3.11",
-  "postCreateCommand": "pip install -r requirements.txt"
-}
+# coordinator.py
+
+import math
+
+
+class Coordinator:
+
+    def __init__(self):
+
+        self.estado = {
+            "step": 0,
+            "norma": 1.0,
+            "regions": {},
+            "dominant_region": None,
+            "noise_map": {}
+        }
+
+    # =====================================
+    # EJECUCIÓN
+    # =====================================
+
+    def ejecutar(self, resultado):
+
+        state = resultado["state"]
+        norma = resultado["norma"]
+
+        self.estado["step"] += 1
+        self.estado["norma"] = norma
+
+        regions = state.get("regions", {})
+
+        if regions:
+            self._analizar_regiones(regions)
+
+        self._evaluar_dominancia()
+
+        return self.estado
+
+    # =====================================
+    # NORMALIZADOR (CLAVE)
+    # =====================================
+
+    def _normalizar_region(self, r: dict) -> dict:
+
+        # asegura esquema canónico
+        if not isinstance(r, dict):
+            r = {}
+
+        if "history" not in r or not isinstance(r["history"], list):
+            r["history"] = []
+
+        if "score" not in r or not isinstance(r["score"], (int, float)):
+            r["score"] = 0.0
+
+        return r
+
+    # =====================================
+    # ANALISIS REGIONAL
+    # =====================================
+
+    def _analizar_regiones(self, regions):
+
+        for name, data in regions.items():
+
+            n = data.get("last_norma", 0.0)
+
+            if name not in self.estado["regions"]:
+                self.estado["regions"][name] = {}
+
+            r = self._normalizar_region(self.estado["regions"][name])
+
+            r["history"].append(n)
+
+            if len(r["history"]) > 20:
+                r["history"].pop(0)
+
+            if len(r["history"]) > 3:
+                mean = sum(r["history"]) / len(r["history"])
+                var = sum((x - mean) ** 2 for x in r["history"]) / len(r["history"])
+                stability = 1.0 / (1.0 + var)
+
+                r["score"] = 0.7 * r["score"] + 0.3 * stability
+
+            self.estado["regions"][name] = r
+
+    # =====================================
+    # DOMINANCIA
+    # =====================================
+
+    def _evaluar_dominancia(self):
+
+        best_region = None
+        best_score = -1.0
+
+        for name, r in self.estado["regions"].items():
+
+            r = self._normalizar_region(r)
+
+            score = r.get("score", 0.0)
+
+            if score > best_score:
+                best_score = score
+                best_region = name
+
+            self.estado["regions"][name] = r
+
+        self.estado["dominant_region"] = best_region
+
+        # ruido estructural
+        for name, r in self.estado["regions"].items():
+
+            score = r.get("score", 0.0)
+
+            self.estado["noise_map"][name] = (score < 0.2)
