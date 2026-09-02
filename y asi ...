@@ -1,0 +1,42 @@
+====================================================================
+           REPORTE DE INGENIERÍA INVERSA: ANÁLISIS DE BINARIO
+====================================================================
+
+[+] OBJETIVO DE LA CORRUPCIÓN (¿Qué intentaba hacer?)
+────────────────────────────────────────────────────────────────────
+1. Bloqueo de Herramientas Estándar
+   Manipular los encabezados estructurales del archivo para que
+   utilidades de diagnóstico (como readelf o desensambladores)
+   asuman que el archivo está roto y detengan su análisis de inmediato.
+
+2. Ocultamiento de la Sección Dinámica
+   Alterar matemáticamente las etiquetas esenciales de control (d_tag)
+   y sus valores asociados (d_val) mediante una multiplicación fija. 
+   Esto vuelve ilegibles las dependencias de librerías y las tablas
+   de funciones para cualquier inspección estática en disco.
+
+3. Ejecución Camuflada
+   Permitir que el programa sea funcional únicamente en tiempo de
+   ejecución, donde un cargador interno revierte el daño justo antes
+   de que el sistema operativo procese los datos reales en memoria.
+
+
+[+] ¿CÓMO SE DELATÓ? (Evidencias del sabotaje estructural)
+────────────────────────────────────────────────────────────────────
+1. El Error de Desbordamiento de Tablas
+   Al ser inspeccionado por el sistema, el binario delató una
+   inconsistencia insalvable: sus tablas de configuración apuntaban
+   a zonas inexistentes más allá del tamaño real del archivo en disco.
+
+2. El Patrón Matemático Uniforme (El factor 0x10000)
+   La alteración no produjo basura aleatoria. Se delató al dejar un
+   rastro idéntico y predecible en cada registro: todos los datos
+   fueron desplazados exactamente 2 bytes hacia la izquierda.
+
+3. Coincidencia Perfecta de Valores
+   Las constantes pequeñas (como 0x1, 0x5) y las direcciones de
+   memoria grandes (como 0x141688) mantenían su estructura íntegra,
+   pero multiplicadas por el mismo factor, confirmando una alteración
+   sistemática y artificial del mapa dinámico.
+
+====================================================================
